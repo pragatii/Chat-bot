@@ -14,3 +14,12 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::any('/chatbot-message' , function () {
+    \App\Services\SimplifiiDatabaseService::locationsMarkedOnSingleDAy("2017-09-27");
+  /* $wit_service = new \App\Services\WitService();
+   $query = "My all locations marked today";
+   $wit_service->getEntities($query);*/
+});
+
+Route::any('/ask', 'ChatController@ask' );
