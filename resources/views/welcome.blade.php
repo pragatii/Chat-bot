@@ -76,7 +76,8 @@
 
         <div class="col-md-6" style="margin-left:300px ">
             <div class="input-group">
-                <input id="ask" type="text" class="form-control" value="{!!isset($query) ? $query : ''!!}" placeholder="Search for..." aria-label="Search for...">
+                <input id="ask" type="text" class="form-control" value="{!!isset($query) ? $query : ''!!}"
+                       placeholder="Search for..." aria-label="Search for...">
                 <span class="input-group-btn">
         <button class="btn btn-secondary" type="button" onclick="onClickGO()">Go!</button>
       </span>
@@ -85,6 +86,13 @@
         @if(isset($result))
             <div class="col-md-6" style="margin-left: 300px">
                 <label id="ans" name="ans">You have {{$result->count()}} locations marked for the criteria.</label>
+                <ul class="list-group">
+                    @foreach($result as $item)
+                        <li class="list-group-item">
+                            <img src="https://maps.googleapis.com/maps/api/staticmap?center={{$item->float1}},{{$item->float2}}&zoom=17&size=500x400&markers={{$item->float1}},{{$item->float2}}&maptype=roadmap&format=png&key=AIzaSyBgvAHuj4BBj00hldnDbzklX76854EEy8Y" alt="{{$item->state}}">
+                        </li>
+                    @endforeach
+                </ul>
             </div>
         @endif
 
