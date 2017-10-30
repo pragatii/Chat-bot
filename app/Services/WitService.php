@@ -39,25 +39,8 @@ class WitService
         }
 
         $response = $this->curl->response;
-        dd($response);
 
-        $entities = [];
-
-        if (isset($response->entities) && count($response->entities) > 0) {
-            if(isset($response->entities->datetime)){
-                $timestamp = $response->entities->datetime[0]->value;
-                //dd($timestamp);
-                SimplifiiDatabaseService::locationsMarkedOnSingleDAy($timestamp);
-            }
-           /* foreach ($response->entities as $key => $entity) {
-                foreach ($entity as $e) {
-                    $ob = new WitEntity($key, $e->value, $e->confidence);
-                    array_push($entities, $ob);
-                }
-            }*/
-        }
-
-        return $entities;
+        return $response;
     }
 
     public function __destruct()
