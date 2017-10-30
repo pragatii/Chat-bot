@@ -84,16 +84,24 @@
             </div>
         </div>
         @if(isset($result))
+            <h1>You have {{$result->count()}} locations marked for the criteria.</h1>
+
             <div class="col-md-6" style="margin-left: 300px">
-                <label id="ans" name="ans">You have {{$result->count()}} locations marked for the criteria.</label>
-                <ul class="list-group">
+                <div class="list-group">
                     @foreach($result as $item)
-                        <li class="list-group-item">
-                            <img src="https://maps.googleapis.com/maps/api/staticmap?center={{$item->float1}},{{$item->float2}}&zoom=17&size=500x400&markers={{$item->float1}},{{$item->float2}}&maptype=roadmap&format=png&key=AIzaSyBgvAHuj4BBj00hldnDbzklX76854EEy8Y" alt="{{$item->state}}">
-                        </li>
+                        <a href="https://www.google.com/maps/?q={{$item->float1}},{{$item->float2}}" target="_blank"
+                           class="list-group-item">
+                            <img src="https://maps.googleapis.com/maps/api/staticmap?center={{$item->float1}},{{$item->float2}}&zoom=17&size=100x100&markers={{$item->float1}},{{$item->float2}}&maptype=roadmap&format=png&key=AIzaSyBgvAHuj4BBj00hldnDbzklX76854EEy8Y"
+                                 alt="{{$item->state}}">
+                            <span>{{$item->string2 . ' ' . $item->string3}}</span>
+                        </a>
                     @endforeach
-                </ul>
+                </div>
             </div>
+        @endif
+
+        @if(isset($errorString))
+            <h1>Sorry, I could not undertand please try something else.</h1>
         @endif
 
     </div>

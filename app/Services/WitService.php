@@ -11,6 +11,7 @@ namespace App\Services;
 
 use App\DatetimeInterval;
 use App\DatetimeValue;
+use App\EmailEntity;
 use App\Greeting;
 use App\Intent;
 use Curl\Curl;
@@ -48,6 +49,7 @@ class WitService
         }
 
         $response = $this->curl->response;
+//        dd($response);
 
         $objects = [];
 
@@ -64,7 +66,7 @@ class WitService
                         }
                         break;
                     case 'intent':
-                        array_push($objects, new Intent($objects));
+                        array_push($objects, new Intent($entity));
                         break;
                     case 'greetings':
                         array_push($objects, new Greeting($entity));
@@ -72,6 +74,8 @@ class WitService
                     case 'thanks':
                         //
                         break;
+                    case 'email':
+                        array_push($objects, new EmailEntity($entity));
                 }
             }
         }
