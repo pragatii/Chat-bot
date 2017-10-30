@@ -9,6 +9,10 @@
 namespace App\Services;
 
 
+use App\DatetimeInterval;
+use App\DatetimeValue;
+use App\Greeting;
+use App\Intent;
 use Curl\Curl;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
@@ -26,6 +30,11 @@ class WitService
         $this->curl = new Curl();
     }
 
+    /**
+     * @param $query
+     * @return array Entity
+     * @throws \Exception
+     */
     public function getEntities($query)
     {
         $this->curl->setHeader('Authorization', 'Bearer ' . env('WIT_SERVER_ACCESS_TOKEN'));
@@ -40,7 +49,34 @@ class WitService
 
         $response = $this->curl->response;
 
-        return $response;
+        $objects = [];
+
+        foreach ($response->entities as $key => $entities) {
+            foreach ($entities as $entity) {
+                switch ($key) {
+                    case 'datetime':
+                        if ($entity->type == 'value') {
+                            array_push($objects, new DatetimeValue($entity));
+                        } else if ($entity->type == 'interval') {
+                            array_push($objects, new DatetimeInterval($entity));
+                        } else {
+                            throw new \Exception('Not compatible type');
+                        }
+                        break;
+                    case 'intent':
+                        array_push($objects, new Intent($objects));
+                        break;
+                    case 'greetings':
+                        array_push($objects, new Greeting($entity));
+                        break;
+                    case 'thanks':
+                        //
+                        break;
+                }
+            }
+        }
+
+        return $objects;
     }
 
     public function __destruct()

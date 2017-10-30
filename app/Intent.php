@@ -9,9 +9,14 @@
 namespace App;
 
 
-class Intent
+class Intent extends Entity
 {
     function __construct($object)
     {
+    }
+
+    function getQuery($query)
+    {
+        return $query->where('entity', 'Location');
     }
 }

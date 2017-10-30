@@ -9,7 +9,9 @@
 namespace App;
 
 
-class DatetimeValue
+use Carbon\Carbon;
+
+class DatetimeValue extends Entity
 {
     public $confidence;
     public $value;
@@ -22,5 +24,15 @@ class DatetimeValue
         $this->grain = $object->grain;
         $this->type = $object->type;
         $this->value = $object->value;
+    }
+
+    function getQuery($query)
+    {
+        $date = Carbon::parse($this->value);
+        $start_of_day = $date->copy()->startOfDay();
+        $end_of_day = $date->copy()->endOfDay();
+
+        return $query->where('created_at', '>=', $start_of_day)
+            ->where('created_at', '<=', $end_of_day);
     }
 }

@@ -8,7 +8,6 @@
 
 namespace App\Services;
 
-
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -24,21 +23,32 @@ class SimplifiiDatabaseService
             ->where('entity', 'Location')
             ->where('created_at', '>=', $start_of_day)
             ->where('created_at', '<=', $end_of_day)
-            ->count();
-        dd($cards);
+            ->get();
+
+        return $cards;
     }
 
     public static function locationMarkedBetween($from, $to)
     {
-        $fromDate = Carbon::parse($from);
-        $toDate = Carbon::parse($to);
+        if (!is_null($from)) {
+            $fromDate = Carbon::parse($from);
+        } else {
+            $fromDate = Carbon::now()->subCentury();
+        }
+
+        if (!is_null($to)) {
+            $toDate = Carbon::parse($to);
+        } else {
+            $toDate = Carbon::now();
+        }
 
         $cards = DB::table('cards')
             ->where('entity', 'Location')
             ->where('created_at', '>=', $fromDate)
             ->where('created_at', '<=', $toDate)
             ->count();
-        dd($cards);
+
+        return $cards;
 
     }
 

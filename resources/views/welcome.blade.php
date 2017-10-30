@@ -76,7 +76,7 @@
 
         <div class="col-md-6" style="margin-left:300px ">
             <div class="input-group">
-                <input id="ask" type="text" class="form-control" placeholder="Search for..." aria-label="Search for...">
+                <input id="ask" type="text" class="form-control" value="{!!isset($query) ? $query : ''!!}" placeholder="Search for..." aria-label="Search for...">
                 <span class="input-group-btn">
         <button class="btn btn-secondary" type="button" onclick="onClickGO()">Go!</button>
       </span>
@@ -84,7 +84,7 @@
         </div>
         @if(isset($result))
             <div class="col-md-6" style="margin-left: 300px">
-                <label id="ans" name="ans"></label>
+                <label id="ans" name="ans">You have {{$result->count()}} locations marked for the criteria.</label>
             </div>
         @endif
 

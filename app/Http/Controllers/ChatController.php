@@ -2,48 +2,27 @@
 
 namespace App\Http\Controllers;
 
-use App\DatetimeInterval;
-use App\DatetimeValue;
-use App\Greeting;
-use App\Intent;
 use App\Services\WitService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ChatController extends Controller
 {
     public function ask(Request $request)
     {
-        $query = $request->get('query');
+        $queryString = $request->get('query');
         $witService = new WitService();
-        $entities = $witService->getEntities($query);
-//        dd($entities);
+        $entities = $witService->getEntities($queryString);
 
-        $objects = [];
+        $query = DB::table('cards');
 
-        foreach ($entities->entities as $key => $entities) {
-            foreach ($entities as $entity) {
-                switch ($key) {
-                    case 'datetime':
-                        if ($entity->type == 'value') {
-                            array_push($objects, new DatetimeValue($entity));
-                        } else if ($entity->type == 'interval') {
-                            array_push($objects, new DatetimeInterval($entity));
-                        } else {
-                            throw new \Exception('Not compatible type');
-                        }
-                        break;
-                    case 'intent':
-                        array_push($objects, new Intent($objects));
-                        break;
-                    case 'greetings':
-                        array_push($objects, new Greeting($entity));
-                        break;
-                    case 'thanks':
-                        //
-                        break;
-                }
-            }
+        foreach ($entities as $entity) {
+            $query = $entity->getQuery($query);
         }
-        dd($objects);
+
+        return view('welcome', [
+            'result' => $query->get(),
+            'query' => $queryString
+        ]);
     }
 }

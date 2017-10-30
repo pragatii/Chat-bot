@@ -11,7 +11,7 @@ namespace App;
 
 use Carbon\Carbon;
 
-class DatetimeInterval
+class DatetimeInterval extends Entity
 {
     public $to;
     public $from;
@@ -29,5 +29,24 @@ class DatetimeInterval
 
         $this->confidence = $object->confidence;
         $this->type = $object->type;
+    }
+
+    function getQuery($query)
+    {
+        if (!is_null($this->from)) {
+            $fromDate = $this->from->value;
+        } else {
+            $fromDate = Carbon::now()->subCentury();
+        }
+
+        if (!is_null($this->to)) {
+            $toDate = $this->to->value;
+        } else {
+            $toDate = Carbon::now();
+        }
+//        dd($fromDate, $toDate);
+
+        return $query->where('created_at', '>=', $fromDate)
+            ->where('created_at', '<=', $toDate);
     }
 }
